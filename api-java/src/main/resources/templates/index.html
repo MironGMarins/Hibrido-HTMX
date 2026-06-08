@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Protótipo 2 - Híbrido (Java + Python)</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; background-color: #f8fafc; }
+        .painel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 800px; margin: auto;}
+        select { padding: 10px; font-size: 16px; margin-bottom: 20px; margin-right: 10px;}
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        .totais { color: #2563eb; font-weight: bold; font-size: 18px; margin-top: 20px;}
+    </style>
+</head>
+<body>
+
+<div class="painel">
+    <h2>🚀 Dashboard Híbrido (Java + Python)</h2>
+
+    <form hx-get="/filtrar" hx-target="#area-resultados" hx-trigger="change">
+        <select name="regiao">
+            <option value="TODOS">Todas as Regiões</option>
+            <option th:each="r : ${listaDeRegioes}" th:value="${r}" th:text="${r}"></option>
+        </select>
+        <select name="produto">
+            <option value="TODOS">Todos os Produtos</option>
+            <option th:each="p : ${listaDeProdutos}" th:value="${p}" th:text="${p}"></option>
+        </select>
+        <select name="status">
+            <option value="TODOS">Todos os Status</option>
+            <option th:each="s : ${listaDeStatus}" th:value="${s}" th:text="${s}"></option>
+        </select>
+    </form>
+
+    <div id="area-resultados">
+        <div th:fragment="fragmento-tabela">
+            <table>
+                <tr><th>Mês</th><th>Região</th><th>Produto</th><th>Status</th><th>Valor (R$)</th></tr>
+                <tr th:each="t : ${transacoes}">
+                    <td th:text="${t.mes}"></td><td th:text="${t.regiao}"></td><td th:text="${t.produto}"></td><td th:text="${t.status}"></td><td th:text="${t.valor}"></td>
+                </tr>
+            </table>
+            <div class="totais">Total Faturado: R$ <span th:text="${totalRegiao}">0.0</span></div>
+
+            <div style="margin-top: 40px;">
+                <div hx-get="http://localhost:8000/gerar-grafico-plotly"
+                     hx-trigger="load, change from:form"
+                     hx-include="[name='regiao']">
+                    <p style="color: gray; font-style: italic;">Ligando os motores do Python...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
