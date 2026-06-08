@@ -1,0 +1,15 @@
+**/venv/
+**/.venv/
+# Arquivos de cache do Python
+**/__pycache__/
+**/*.pyc
+
+**/target/
+**/build/
+**/.gradle/
+
+.idea/
+.vscode/
+*.iml
+*.suo
+*.ntvs*
